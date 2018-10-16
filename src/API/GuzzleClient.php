@@ -88,6 +88,9 @@ class GuzzleClient implements HttpClientInterface
                 'headers' => $this->headers,
                 'form_params' => $this->postData
             ]);
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            // Will be handled by Keepa
+            $this->response = $e->getResponse();
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
             throw new \Exception("GuzzleException", 0, $e);
         }
