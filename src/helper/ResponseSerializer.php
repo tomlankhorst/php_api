@@ -6,6 +6,13 @@ use Keepa\API\Response;
 
 class ResponseSerializer {
 
+    /**
+     * Maps a JSON decoded stdClass to a response
+     *
+     * @param \stdClass $json
+     * @param Response $response
+     * @return Response
+     */
     public function map(\stdClass $json, Response $response) : Response
     {
         try {
@@ -35,6 +42,10 @@ class ResponseSerializer {
         return $response;
     }
 
+    /**
+     * @param \ReflectionProperty $property
+     * @return array
+     */
     protected function phpdocParams(\ReflectionProperty $property) : array
     {
         // Retrieve the full PhpDoc comment block
