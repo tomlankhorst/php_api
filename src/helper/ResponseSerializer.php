@@ -13,29 +13,34 @@ class ResponseSerializer {
     /**
      * Maps a JSON decoded stdClass to a response
      *
-     * @param \stdClass $json
-     * @param Response $response
-     * @return Response
+     * @param \stdClass $source
+     * @param object $target
+     * @return object
      */
-    public function map(\stdClass $json, Response $response) : Response
+    public function map(\stdClass $source, $target)
     {
         try {
-            $reflect = new \ReflectionClass($response);
+            $reflect = new \ReflectionClass($target);
 
             foreach ($reflect->getProperties() as $property) {
                 $prop = $property->name;
 
                 $doc = $this->phpdocParams($property);
 
-                if (property_exists($json, $prop)) {
-                    $value = $json->$prop;
+                if (property_exists($source, $prop)) {
+                    $value = $source->$prop;
 
                     // Convert objects to array if PhpDoc specifies so
                     if (strpos($doc['@var'][0], '[]')!==false && is_object($value)) {
                         $value = (array)$value;
+                        $class = substr($doc['@var'][0], 0, -2);
+
+                        foreach($value as &$item) {
+                            $item = $this->map($item, new $class);
+                        }
                     }
 
-                    $response->$prop = $value;
+                    $target->$prop = $value;
                 }
             }
 
@@ -43,7 +48,7 @@ class ResponseSerializer {
 
         }
 
-        return $response;
+        return $target;
     }
 
     /**
