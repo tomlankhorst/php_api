@@ -28,14 +28,23 @@ class ResponseSerializer {
                 if (property_exists($source, $prop)) {
                     $value = $source->$prop;
 
-                    // Convert objects to array if PhpDoc specifies so
-                    if (strpos($doc['@var'][0], '[]')!==false && is_object($value)) {
-                        $value = (array)$value;
-                        $class = substr($doc['@var'][0], 0, -2);
+                    $types = explode('|', trim($doc['@var'][0]));
 
-                        foreach($value as &$item) {
-                            $item = $this->map($item, new $class);
+                    foreach($types as $type){
+                        // Convert objects to array if PhpDoc specifies so
+                        if (strpos($type, '[]')!==false) {
+                            $value = (array)$value;
+                            $class = substr($type, 0, -2);
+
+                            if(class_exists($class)){
+                                foreach($value as &$item) {
+                                    $item = $this->map($item, new $class);
+                                }
+
+                                break; // match, break!
+                            }
                         }
+
                     }
 
                     $target->$prop = $value;
