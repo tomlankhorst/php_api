@@ -1,4 +1,8 @@
 <?php
+/**
+ * @copyright
+ * @author Tom Lankhorst <hello@tomlankhorst.nl>
+ */
 
 namespace Keepa\helper;
 
