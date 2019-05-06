@@ -28,11 +28,13 @@ class ResponseSerializer {
                 if (property_exists($source, $prop)) {
                     $value = $source->$prop;
 
-                    $types = explode('|', trim($doc['@var'][0]));
+                    $var_doc = $doc['@var'][0] ?? null;
+
+                    $types = explode('|', trim($var_doc));
 
                     foreach($types as $type){
                         // Convert objects to array if PhpDoc specifies so
-                        if (strpos($type, '[]')!==false) {
+                        if ($type && strpos($type, '[]')!==false) {
                             $value = (array)$value;
                             $class = substr($type, 0, -2);
 
