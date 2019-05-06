@@ -1,12 +1,12 @@
 <?php
 namespace Keepa;
 
-use JsonMapper;
 use Keepa\API\CurlClient;
 use Keepa\API\HttpClientInterface;
 use Keepa\API\Request;
 use Keepa\API\Response;
 use Keepa\API\ResponseStatus;
+use Keepa\helper\ResponseSerializer;
 
 class KeepaAPI
 {
@@ -21,7 +21,7 @@ class KeepaAPI
     {
         $this->accessKey = $accessKey;
         $this->userAgent = "KEEPA-PHP Framework-" . "1.36";
-        $this->serializer = new JsonMapper();
+        $this->serializer = new ResponseSerializer();
 
         if (PHP_INT_SIZE != 8)
             throw new \Exception("This Framework works only on x64 Platforms/PHP!");
@@ -154,6 +154,8 @@ class KeepaAPI
                     return $result;
             }
         }
+
+        return null;
     }
 
     public function setHttpClient($client)
