@@ -6,8 +6,6 @@
 
 namespace Keepa\helper;
 
-use Keepa\API\Response;
-
 class ResponseSerializer {
 
     /**
